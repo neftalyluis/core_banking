@@ -16,7 +16,7 @@ You can send the request with an empty JSON and it would create it with a balanc
 
 ### OR
 
-Indicate a balance
+Indicate a balance on cents
 
 ```json
 {

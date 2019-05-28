@@ -24,14 +24,15 @@ defmodule CoreBanking.Router do
     with {:ok, uuid} <- Map.fetch(conn.params, "uuid"),
          {:ok, operation} <- Map.fetch(conn.params, "operation"),
          {:ok, amount} <- Map.fetch(conn.params, "amount") do
-      call_operation(conn, operation, uuid, amount)
+      call_operation(conn, String.to_atom(operation), uuid, amount)
     else
       _ -> bad_request(conn)
     end
   end
 
   post "/accounts/" do
-    {:ok, uuid} = CoreBanking.create_new_account(conn.params["balance"])
+    balance = conn.params |> Map.get("balance", 0)
+    {:ok, uuid} = CoreBanking.create_new_account(balance)
     created(conn, %{account: %{uuid: uuid}})
   end
 
@@ -43,6 +44,7 @@ defmodule CoreBanking.Router do
     case CoreBanking.operation(operation, String.to_atom(uuid), amount) do
       {:ok, balance} -> success(conn, %{account: %{uuid: uuid, balance: balance}})
       {:error, :not_found} -> not_found(conn)
+      {:error, :invalid_amount} -> bad_request(conn)
       {:error, error} -> conflict(conn, %{error: error})
     end
   end

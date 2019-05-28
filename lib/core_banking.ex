@@ -19,6 +19,10 @@ defmodule CoreBanking do
     end
   end
 
+  def operation(operation, _uuid, _amount) when operation not in [:deposit, :withdrawal], do: {:error, :invalid_operation}
+  def operation(_operation, _uuid, amount) when not is_integer(amount) , do: {:error, :invalid_amount}
+  def operation(_operation, _uuid, amount) when not is_integer(amount) , do: {:error, :invalid_amount}
+  def operation(_operation, _uuid, amount) when 0 >= amount , do: {:error, :invalid_amount}
   def operation(:deposit, uuid, amount), do: make_deposit(uuid, amount)
   def operation(:withdrawal, uuid, amount), do: make_withdrawal(uuid, amount)
 
@@ -36,7 +40,9 @@ defmodule CoreBanking do
     end
   end
 
-  def create_new_account(initial_amount \\ 0) do
+  def create_new_account, do: create_new_account(0)
+
+  def create_new_account(initial_amount) do
     uuid = UUID.uuid4()
 
     {:ok, _pid} =
