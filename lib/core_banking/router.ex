@@ -32,6 +32,7 @@ defmodule CoreBanking.Router do
 
   post "/accounts/" do
     balance = conn.params |> Map.get("balance", 0)
+
     case CoreBanking.create_new_account(balance) do
       {:ok, uuid} -> created(conn, %{account: %{uuid: uuid}})
       {:error, _reason} -> bad_request(conn)
