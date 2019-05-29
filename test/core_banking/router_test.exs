@@ -101,7 +101,7 @@ defmodule CoreBanking.RouterTest do
     test "that you can deposit to an account" do
       {:ok, account_uuid} = CoreBanking.create_new_account()
 
-      payload = %{operation: :deposit, amount: 12_341_234}
+      payload = %{operation: "deposit", amount: 12_341_234}
 
       conn =
         :put
@@ -118,7 +118,7 @@ defmodule CoreBanking.RouterTest do
     test "that you can withdraw from an account" do
       {:ok, account_uuid} = CoreBanking.create_new_account(12_341_234)
 
-      payload = %{operation: :withdrawal, amount: 12_341_234}
+      payload = %{operation: "withdrawal", amount: 12_341_234}
 
       conn =
         :put
@@ -135,7 +135,7 @@ defmodule CoreBanking.RouterTest do
     test "that you get 404 when making an operation for a non existent account" do
       uuid = UUID.uuid4()
 
-      payload = %{operation: :withdrawal, amount: 12_341_234}
+      payload = %{operation: "withdrawal", amount: 12_341_234}
 
       conn =
         :put
@@ -149,7 +149,7 @@ defmodule CoreBanking.RouterTest do
     test "that you get 400 when making a bad request" do
       uuid = UUID.uuid4()
 
-      payload = %{operation: :withdrawal}
+      payload = %{operation: "withdrawal"}
 
       conn =
         :put
@@ -163,7 +163,7 @@ defmodule CoreBanking.RouterTest do
     test "that you can't withdraw more money that you have on your account" do
       {:ok, account_uuid} = CoreBanking.create_new_account()
 
-      payload = %{operation: :withdrawal, amount: 12_341_234}
+      payload = %{operation: "withdrawal", amount: 12_341_234}
 
       conn =
         :put
