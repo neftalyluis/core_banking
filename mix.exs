@@ -26,7 +26,7 @@ defmodule CoreBanking.MixProject do
       {:uuid, "~> 1.1"},
       {:jason, "~> 1.1"},
       {:dialyxir, "~> 1.0.0-rc.6", only: [:dev], runtime: false},
-      {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.1.0", only: [:dev, :test], runtime: false}
     ]
   end
 end
