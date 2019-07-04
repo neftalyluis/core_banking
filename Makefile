@@ -1,3 +1,7 @@
+APP_NAME ?= `grep 'app:' mix.exs | sed -e 's/\[//g' -e 's/ //g' -e 's/app://' -e 's/[:,]//g'`
+APP_VSN ?= `grep 'version:' mix.exs | cut -d '"' -f2`
+BUILD ?= `git rev-parse --short HEAD`
+
 build:
 	mix do deps.get, compile
 run:
@@ -16,6 +20,6 @@ docker.start:
 	make docker.build
 	make docker.run
 docker.build:
-	docker build . -t core_banking
+	docker build -t $(APP_NAME):$(APP_VSN)-$(BUILD) -t $(APP_NAME):latest .
 docker.run:
-	docker run -i --rm --name core_banking -p 8080:8080 -t core_banking
+	docker run --expose 4000 -p 4000:4000 --rm -it core_banking:latest
