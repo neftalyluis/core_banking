@@ -25,7 +25,7 @@ RUN mix do deps.get, deps.compile, compile
 
 RUN \
   mkdir -p /opt/built && \
-  mix release && \
+  mix release --overwrite && \
   cp -ar _build/${MIX_ENV}/rel/${APP_NAME}/ /opt/built && \
   cd /opt/built
 
@@ -45,4 +45,4 @@ WORKDIR /opt/app
 
 COPY --from=builder /opt/built .
 
-CMD trap 'exit' INT; /opt/app/${APP_NAME}/bin/${APP_NAME} daemon
+CMD /opt/app/${APP_NAME}/bin/${APP_NAME} start

@@ -27,7 +27,7 @@ defmodule CoreBanking.Application do
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: CoreBanking.Supervisor]
-    Logger.info("Started Application at http://localhost:#{http_port()}}")
+    Logger.info("Started Application at http://localhost:#{http_port()}")
     Supervisor.start_link(children, opts)
   end
 
