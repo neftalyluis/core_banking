@@ -37,18 +37,12 @@ defmodule CoreBanking.Account do
     )
   end
 
-  @spec check_balance(atom()) :: {:ok, non_neg_integer()}
-  def check_balance(account), do: GenServer.call(account, :balance)
+  @spec balance(atom()) :: {:ok, non_neg_integer()}
+  def balance(account), do: GenServer.call(account, :balance)
 
   @spec deposit(atom(), non_neg_integer()) :: {:ok, non_neg_integer()}
   def deposit(account, value), do: GenServer.call(account, {:deposit, value})
 
   @spec withdraw(atom(), non_neg_integer()) :: {:ok, non_neg_integer()} | {:error, :no_funds}
   def withdraw(account, value), do: GenServer.call(account, {:withdraw, value})
-
-  @spec process_name(pid()) :: atom()
-  def process_name(pid), do: pid |> Process.info() |> Keyword.get(:registered_name)
-
-  @spec exists(atom()) :: pid() | nil
-  def exists(name), do: Process.whereis(name)
 end

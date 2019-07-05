@@ -6,17 +6,10 @@ defmodule CoreBanking.RouterTest do
 
   @opts Router.init([])
 
-  @doc """
-    Removes all child processes from the AccountRegistry supervisor
-    Useful for clean state on every test
-  """
+  # Removes all child processes from the AccountRegistry supervisor
+  # Useful for cleaning state on every test
   setup do
-    CoreBanking.AccountRegistry
-    |> DynamicSupervisor.which_children()
-    |> Enum.map(fn child -> Kernel.elem(child, 1) end)
-    |> Enum.each(fn pid ->
-      DynamicSupervisor.terminate_child(CoreBanking.AccountRegistry, pid)
-    end)
+    CoreBanking.Registry.remove_all_accounts()
   end
 
   describe "#accounts" do
@@ -98,6 +91,18 @@ defmodule CoreBanking.RouterTest do
       assert body["account"]["balance"] == payload["balance"]
     end
 
+    test "that you can't create a new account with an invalid balance" do
+      payload = %{balance: "lol"}
+
+      conn =
+        :post
+        |> conn("/accounts/", payload)
+        |> Router.call(@opts)
+
+      assert conn.state == :sent
+      assert conn.status == 400
+    end
+
     test "that you can deposit to an account" do
       {:ok, account_uuid} = CoreBanking.create_new_account()
 
@@ -118,7 +123,7 @@ defmodule CoreBanking.RouterTest do
     test "that you can withdraw from an account" do
       {:ok, account_uuid} = CoreBanking.create_new_account(12_341_234)
 
-      payload = %{operation: "withdrawal", amount: 12_341_234}
+      payload = %{operation: "withdraw", amount: 12_341_234}
 
       conn =
         :put
@@ -135,7 +140,7 @@ defmodule CoreBanking.RouterTest do
     test "that you get 404 when making an operation for a non existent account" do
       uuid = UUID.uuid4()
 
-      payload = %{operation: "withdrawal", amount: 12_341_234}
+      payload = %{operation: "withdraw", amount: 12_341_234}
 
       conn =
         :put
@@ -149,7 +154,21 @@ defmodule CoreBanking.RouterTest do
     test "that you get 400 when making a bad request" do
       uuid = UUID.uuid4()
 
-      payload = %{operation: "withdrawal"}
+      payload = %{operation: "withdraw"}
+
+      conn =
+        :put
+        |> conn("/accounts/#{uuid}", payload)
+        |> Router.call(@opts)
+
+      assert conn.state == :sent
+      assert conn.status == 400
+    end
+
+    test "that you get 400 when using bad amounts" do
+      {:ok, uuid} = CoreBanking.create_new_account()
+
+      payload = %{operation: "withdraw", amount: "lol"}
 
       conn =
         :put
@@ -163,7 +182,7 @@ defmodule CoreBanking.RouterTest do
     test "that you can't withdraw more money that you have on your account" do
       {:ok, account_uuid} = CoreBanking.create_new_account()
 
-      payload = %{operation: "withdrawal", amount: 12_341_234}
+      payload = %{operation: "withdraw", amount: 12_341_234}
 
       conn =
         :put

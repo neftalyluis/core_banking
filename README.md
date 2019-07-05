@@ -30,7 +30,7 @@ This application is composed of:
 If you only want to test the application without the hassle of installing Erlang and Elixir you can run the app with Docker using `make docker.start` 
 
 ### For development
-You need Erlang 22 and Elixir 1.8.2 installed on your system, I suggest [asdf](https://github.com/asdf-vm/asdf.git) to manage the SDK versions
+You need Erlang 22 and Elixir 1.9 installed on your system, I suggest [asdf](https://github.com/asdf-vm/asdf.git) to manage the SDK versions
 
 After installing the SDK you can:
 

@@ -12,12 +12,7 @@ defmodule CoreBanking.Router do
   end
 
   get "/accounts/:uuid" do
-    uuid = conn.params |> Map.get("uuid") |> String.to_atom()
-
-    case CoreBanking.get_balance_from_account(uuid) do
-      {:ok, balance} -> success(conn, %{account: %{uuid: uuid, balance: balance}})
-      {:error, :not_found} -> not_found(conn)
-    end
+    call_operation(conn, :balance, Map.get(conn.params, "uuid"))
   end
 
   put "/accounts/:uuid" do
@@ -43,7 +38,7 @@ defmodule CoreBanking.Router do
     not_found(conn)
   end
 
-  defp call_operation(conn, operation, uuid, amount) do
+  defp call_operation(conn, operation, uuid, amount \\ nil) do
     case CoreBanking.operation(operation, String.to_atom(uuid), amount) do
       {:ok, balance} -> success(conn, %{account: %{uuid: uuid, balance: balance}})
       {:error, :not_found} -> not_found(conn)

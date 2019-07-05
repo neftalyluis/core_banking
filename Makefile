@@ -13,7 +13,7 @@ ci:
 	make build
 	mix format --check-formatted
 	mix credo --strict
-	mix test
+	mix test --cover
 test:
 	mix test
 docker.start:
