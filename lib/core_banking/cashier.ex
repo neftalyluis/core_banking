@@ -1,5 +1,5 @@
 defmodule CoreBanking.Cashier do
-  @moduledoc false
+  @moduledoc "Handles all the validation to interact with a bank account, like bad amounts or operations non-existent"
 
   @operations ~w(deposit withdraw balance)a
 

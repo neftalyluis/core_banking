@@ -1,5 +1,5 @@
 defmodule CoreBanking.Registry do
-  @moduledoc false
+  @moduledoc "Methods for interacting with the Dynamic Supervisor handling the Bank Accounts"
 
   def create_new_account, do: create_new_account(0)
 
