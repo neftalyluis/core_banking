@@ -26,14 +26,20 @@ This application is composed of:
 
 ## Installation
 
-### For "production" usage
-If you only want to test the application without the hassle of installing Erlang and Elixir you can run the app with Docker using `make docker.start` 
+### For production usage
+The app generates an OTP Release on a Docker container suitable for production usage
+
+If you only want to test the application without the hassle of installing Erlang and Elixir you can run the app with Docker using `make docker.start`
+
+If you want to generate only the image of the application use `make docker.build` 
+
+To run the last built image just use `make docker.run`
 
 ### For development
 You need Erlang 22 and Elixir 1.9 installed on your system, I suggest [asdf](https://github.com/asdf-vm/asdf.git) to manage the SDK versions
 
 After installing the SDK you can:
 
-- Run the app with `make start`, and the app will be available on http://localhost:8080/
+- Run the app with `make start`, and the app will be available on http://localhost:4000/
 - Run tests, linter, and formatter like on a CI/CD pipeline with `make ci`
 
